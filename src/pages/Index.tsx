@@ -4,8 +4,8 @@ import { RecentMeals } from "@/components/RecentMeals";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-secondary p-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-secondary/50 p-4 md:p-6">
+      <div className="max-w-4xl mx-auto space-y-6">
         <DashboardHeader />
         <NutritionSummary />
         <RecentMeals />
