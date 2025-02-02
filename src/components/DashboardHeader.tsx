@@ -1,4 +1,4 @@
-import { Camera, Plus, Settings } from "lucide-react";
+import { Camera, Plus, Settings, Calendar, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const DashboardHeader = () => {
@@ -8,11 +8,19 @@ export const DashboardHeader = () => {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-primary-dark">FusionFoodie</h1>
-            <p className="text-muted-foreground text-sm">AI-Powered Food Tracking</p>
+            <p className="text-muted-foreground text-sm">Smart AI Food Tracking</p>
           </div>
-          <Button variant="ghost" size="icon">
-            <Settings className="w-5 h-5 text-primary" />
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="ghost" size="icon">
+              <History className="w-5 h-5 text-primary" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Calendar className="w-5 h-5 text-primary" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <Settings className="w-5 h-5 text-primary" />
+            </Button>
+          </div>
         </div>
         <div className="flex gap-3 mt-2">
           <Button

@@ -1,11 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Flame, Droplet, Apple } from "lucide-react";
 
 export const NutritionSummary = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 animate-fade-in">
       <Card className="p-5 bg-white hover:shadow-lg transition-shadow duration-200">
-        <h3 className="text-sm font-medium text-muted-foreground mb-2">Daily Calories</h3>
+        <div className="flex items-center gap-2 mb-2">
+          <Flame className="w-5 h-5 text-primary" />
+          <h3 className="text-sm font-medium text-muted-foreground">Daily Calories</h3>
+        </div>
         <div className="flex justify-between mb-3">
           <span className="text-2xl font-bold text-primary">1,200</span>
           <span className="text-muted-foreground text-sm self-end">/ 2,000</span>
@@ -14,7 +18,10 @@ export const NutritionSummary = () => {
       </Card>
       
       <Card className="p-5 bg-white hover:shadow-lg transition-shadow duration-200">
-        <h3 className="text-sm font-medium text-muted-foreground mb-2">Protein</h3>
+        <div className="flex items-center gap-2 mb-2">
+          <Apple className="w-5 h-5 text-primary" />
+          <h3 className="text-sm font-medium text-muted-foreground">Protein</h3>
+        </div>
         <div className="flex justify-between mb-3">
           <span className="text-2xl font-bold text-primary">45g</span>
           <span className="text-muted-foreground text-sm self-end">/ 80g</span>
@@ -23,7 +30,10 @@ export const NutritionSummary = () => {
       </Card>
       
       <Card className="p-5 bg-white hover:shadow-lg transition-shadow duration-200">
-        <h3 className="text-sm font-medium text-muted-foreground mb-2">Water</h3>
+        <div className="flex items-center gap-2 mb-2">
+          <Droplet className="w-5 h-5 text-primary" />
+          <h3 className="text-sm font-medium text-muted-foreground">Water</h3>
+        </div>
         <div className="flex justify-between mb-3">
           <span className="text-2xl font-bold text-primary">1.2L</span>
           <span className="text-muted-foreground text-sm self-end">/ 2.5L</span>
