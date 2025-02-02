@@ -3,6 +3,7 @@ import { NutritionSummary } from "@/components/NutritionSummary";
 import { RecentMeals } from "@/components/RecentMeals";
 import { WeeklyProgress } from "@/components/WeeklyProgress";
 import { MacroDistribution } from "@/components/MacroDistribution";
+import { AddMealDialog } from "@/components/AddMealDialog";
 
 const Index = () => {
   return (
@@ -15,6 +16,7 @@ const Index = () => {
           <MacroDistribution />
         </div>
         <RecentMeals />
+        <AddMealDialog />
       </div>
     </div>
   );
