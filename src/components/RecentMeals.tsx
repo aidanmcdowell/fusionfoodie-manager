@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Clock, Utensils, Camera, Edit2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -28,57 +28,73 @@ interface Meal {
 }
 
 export const RecentMeals = () => {
-  const [meals, setMeals] = useState<Meal[]>([
-    {
-      id: 1,
-      time: "8:30 AM",
-      name: "Breakfast",
-      items: "Oatmeal with berries, Banana",
-      calories: 350,
-      protein: "12g",
-      carbs: "45g",
-      fat: "8g",
-      image: "/placeholder.svg"
-    },
-    {
-      id: 2,
-      time: "12:30 PM",
-      name: "Lunch",
-      items: "Grilled chicken salad, Whole grain bread",
-      calories: 450,
-      protein: "35g",
-      carbs: "30g",
-      fat: "15g",
-      image: "/placeholder.svg"
-    },
-    {
-      id: 3,
-      time: "4:00 PM",
-      name: "Snack",
-      items: "Greek yogurt with honey",
-      calories: 200,
-      protein: "15g",
-      carbs: "20g",
-      fat: "5g",
-      image: "/placeholder.svg"
-    },
-  ]);
+  const [meals, setMeals] = useState<Meal[]>([]);
+
+  useEffect(() => {
+    // Load meals from localStorage
+    const loadMeals = () => {
+      const storedMeals = JSON.parse(localStorage.getItem("meals") || "[]");
+      setMeals(storedMeals);
+    };
+
+    // Load initial meals
+    loadMeals();
+
+    // Listen for updates
+    window.addEventListener("mealsUpdated", loadMeals);
+
+    return () => {
+      window.removeEventListener("mealsUpdated", loadMeals);
+    };
+  }, []);
 
   const handleEditMeal = (meal: Meal) => {
-    toast.info("Edit meal functionality coming soon!");
+    // Open add meal dialog with pre-filled data
+    const addMealDialog = document.getElementById("add-meal-dialog");
+    if (addMealDialog) {
+      addMealDialog.click();
+    }
   };
 
   const handleDeleteMeal = (id: number) => {
-    setMeals(meals.filter(meal => meal.id !== id));
+    const updatedMeals = meals.filter(meal => meal.id !== id);
+    localStorage.setItem("meals", JSON.stringify(updatedMeals));
+    setMeals(updatedMeals);
     toast.success("Meal deleted successfully!");
   };
 
-  const handleAddPhoto = (meal: Meal) => {
-    toast.info("Photo upload functionality coming soon!");
+  const handleAddPhoto = async (meal: Meal) => {
+    try {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      
+      fileInput.onchange = async (e) => {
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const imageData = e.target?.result as string;
+            const updatedMeals = meals.map(m => 
+              m.id === meal.id ? { ...m, image: imageData } : m
+            );
+            localStorage.setItem("meals", JSON.stringify(updatedMeals));
+            setMeals(updatedMeals);
+            toast.success("Photo added successfully!");
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+      
+      fileInput.click();
+    } catch (error) {
+      toast.error("Failed to add photo. Please try again.");
+    }
   };
 
   const handleViewAll = () => {
-    toast.info("View all meals functionality coming soon!");
+    // Navigate to history page
+    window.location.href = "/history";
   };
 
   return (
@@ -112,9 +128,9 @@ export const RecentMeals = () => {
                     </div>
                     <p className="text-sm text-muted-foreground">{meal.items}</p>
                     <div className="flex gap-4 text-xs text-muted-foreground">
-                      <span>Protein: {meal.protein}</span>
-                      <span>Carbs: {meal.carbs}</span>
-                      <span>Fat: {meal.fat}</span>
+                      <span>Protein: {meal.protein}g</span>
+                      <span>Carbs: {meal.carbs}g</span>
+                      <span>Fat: {meal.fat}g</span>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-2">

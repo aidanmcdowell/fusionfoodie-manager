@@ -13,7 +13,16 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
 
+interface MealData {
+  name: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+}
+
 export const AddMealDialog = () => {
+  const [open, setOpen] = useState(false);
   const [mealName, setMealName] = useState("");
   const [calories, setCalories] = useState("");
   const [protein, setProtein] = useState("");
@@ -22,18 +31,43 @@ export const AddMealDialog = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here we'll add the meal to our state management system later
+    
+    const mealData: MealData = {
+      name: mealName,
+      calories: Number(calories),
+      protein: Number(protein),
+      carbs: Number(carbs),
+      fat: Number(fat)
+    };
+
+    // Add meal to local storage
+    const existingMeals = JSON.parse(localStorage.getItem("meals") || "[]");
+    const newMeal = {
+      ...mealData,
+      id: Date.now(),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      items: mealName,
+      image: "/placeholder.svg"
+    };
+    
+    localStorage.setItem("meals", JSON.stringify([newMeal, ...existingMeals]));
+    
+    // Dispatch custom event to notify RecentMeals component
+    window.dispatchEvent(new CustomEvent("mealsUpdated"));
+    
     toast.success("Meal added successfully!");
-    // Reset form
+    
+    // Reset form and close dialog
     setMealName("");
     setCalories("");
     setProtein("");
     setCarbs("");
     setFat("");
+    setOpen(false);
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button id="add-meal-dialog" className="hidden">Open</Button>
       </DialogTrigger>

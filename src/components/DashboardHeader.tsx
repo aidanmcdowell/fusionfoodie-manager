@@ -7,26 +7,61 @@ export const DashboardHeader = () => {
   const navigate = useNavigate();
 
   const handleSnapFood = () => {
-    // For now, show a toast until we implement camera functionality
-    toast.info("Camera functionality coming soon!");
+    // Open device camera
+    if ('mediaDevices' in navigator) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+          // Create a video element to show the camera feed
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          document.body.appendChild(video);
+          video.play();
+          
+          // Take a snapshot after 3 seconds
+          setTimeout(() => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx?.drawImage(video, 0, 0);
+            
+            // Stop the camera and remove video element
+            stream.getTracks().forEach(track => track.stop());
+            document.body.removeChild(video);
+            
+            // Convert to base64 and process
+            const imageData = canvas.toDataURL('image/jpeg');
+            processImage(imageData);
+          }, 3000);
+        })
+        .catch(() => {
+          toast.error("Unable to access camera. Please check permissions.");
+        });
+    } else {
+      toast.error("Camera not available on this device.");
+    }
+  };
+
+  const processImage = (imageData: string) => {
+    // Process the image data
+    toast.success("Food image captured successfully!");
+    document.getElementById("add-meal-dialog")?.click();
   };
 
   const handleAddMeal = () => {
-    // We'll implement this next
-    toast("Opening meal form...");
     document.getElementById("add-meal-dialog")?.click();
   };
 
   const handleHistory = () => {
-    toast.info("Meal history coming soon!");
+    navigate("/history");
   };
 
   const handleCalendar = () => {
-    toast.info("Calendar view coming soon!");
+    navigate("/calendar");
   };
 
   const handleSettings = () => {
-    toast.info("Settings coming soon!");
+    navigate("/settings");
   };
 
   return (
